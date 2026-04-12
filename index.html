@@ -74,6 +74,22 @@
 <script>
 
 let vocab = JSON.parse(localStorage.getItem("vocab")) || [];
+let defaultWords = [
+{word:"abandon",meaning:"to leave completely"},
+{word:"ability",meaning:"power or skill"},
+{word:"able",meaning:"having the power to do something"},
+{word:"apple",meaning:"a fruit"},
+{word:"book",meaning:"collection of pages"}
+];
+
+let stored = JSON.parse(localStorage.getItem("vocab"));
+
+if(stored && stored.length > 0){
+    vocab = stored;
+} else {
+    vocab = defaultWords;
+    localStorage.setItem("vocab", JSON.stringify(vocab));
+}
 
 function render(data) {
     let list = document.getElementById("list");
