@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vocabulary App</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6ff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 22px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .save { background: green; color: white; }
+        .delete { background: red; color: white; }
+        .search { background: blue; color: white; }
+
+        #count {
+            margin: 10px;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📘 Vocabulary App</h1>
+
+<input type="text" id="word" placeholder="Enter Word">
+<input type="text" id="meaning" placeholder="Enter Meaning">
+
+<button class="save" onclick="saveWord()">Save Word</button>
+
+<input type="text" id="search" placeholder="Search Word">
+
+<button class="search" onclick="searchWord()">Search</button>
+<button class="delete" onclick="deleteWord()">Delete Word</button>
+
+<div id="count">Total Words: 0</div>
+
+<div id="list"></div>
+
+<script>
+
+let vocab = JSON.parse(localStorage.getItem("vocab")) || [];
+
+function render(data) {
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    data.forEach(item => {
+        let div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<b>${item.word}</b><br>${item.meaning}`;
+        list.appendChild(div);
+    });
+
+    document.getElementById("count").innerText = "Total Words: " + data.length;
+}
+
+function saveWord() {
+    let word = document.getElementById("word").value;
+    let meaning = document.getElementById("meaning").value;
+
+    if(word === "" || meaning === "") return;
+
+    vocab.push({word, meaning});
+    localStorage.setItem("vocab", JSON.stringify(vocab));
+
+    document.getElementById("word").value = "";
+    document.getElementById("meaning").value = "";
+
+    render(vocab);
+}
+
+function searchWord() {
+    let search = document.getElementById("search").value.toLowerCase();
+    let filtered = vocab.filter(item => item.word.toLowerCase().includes(search));
+    render(filtered);
+}
+
+function deleteWord() {
+    let text = document.getElementById("word").value.toLowerCase();
+
+    if(text === "") {
+        text = document.getElementById("search").value.toLowerCase();
+    }
+
+    vocab = vocab.filter(item => item.word.toLowerCase() !== text);
+    localStorage.setItem("vocab", JSON.stringify(vocab));
+
+    document.getElementById("word").value = "";
+    document.getElementById("search").value = "";
+
+    render(vocab);
+}
+
+render(vocab);
+
+</script>
+
+</body>
+</html>
