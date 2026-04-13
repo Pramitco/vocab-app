@@ -223,11 +223,7 @@ render(vocab);
         document.getElementById("result").innerHTML = `
     <h3>${foundWord.word}</h3>
     <p>${foundWord.meaning}</p>
-    <button onclick="
-    document.getElementById('word').value='${foundWord.word}';
-    document.getElementById('meaning').value='${foundWord.meaning}';
-    saveWord();
-">Save Word</button>
+    <button onclick="saveDirect('${foundWord.word}','${foundWord.meaning}')">Save Word</button>
 `;
         return;
     }
@@ -246,16 +242,19 @@ render(vocab);
        document.getElementById("result").innerHTML = `
     <h3>${word}</h3>
     <p>${meaning}</p>
-       <button onclick="
-    document.getElementById('word').value='${word}';
-    document.getElementById('meaning').value='${meaning}';
-    saveWord();
-">Save Word</button>
+       <button onclick="saveDirect('${word}','${meaning}')">Save Word</button>
 `;
 
     } catch (error) {
         getBasicMeaning(word); // fallback
     }
+}
+       function saveDirect(word, meaning) {
+    if(!word || !meaning) return;
+
+    vocab.push({word, meaning});
+    localStorage.setItem("vocab", JSON.stringify(vocab));
+    render(vocab);
 }
        async function getBasicMeaning(word) {
     document.getElementById("result").innerHTML = "No meaning found 😢";
