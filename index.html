@@ -86,6 +86,56 @@ let defaultWords = [
 {word:"able",meaning:"having the power to do something"},
 {word:"apple",meaning:"a fruit"},
 {word:"book",meaning:"collection of pages"}
+{ word: "Aberration", meaning: "A departure from what is normal or expected" },
+{ word: "Alacrity", meaning: "Brisk and cheerful readiness" },
+{ word: "Anachronistic", meaning: "Belonging to a period other than that being portrayed" },
+{ word: "Apathetic", meaning: "Showing little or no emotion or interest" },
+{ word: "Arduous", meaning: "Involving or requiring strenuous effort" },
+{ word: "Austere", meaning: "Severe or strict in manner or appearance" },
+{ word: "Benevolent", meaning: "Well meaning and kindly" },
+{ word: "Cacophony", meaning: "A harsh mixture of sounds" },
+{ word: "Capricious", meaning: "Given to sudden changes of mood or behavior" },
+{ word: "Clandestine", meaning: "Kept secret or done secretly" },
+{ word: "Coerce", meaning: "To force someone to do something" },
+{ word: "Conundrum", meaning: "A confusing and difficult problem" },
+{ word: "Deleterious", meaning: "Causing harm or damage" },
+{ word: "Demure", meaning: "Reserved, modest, and shy" },
+{ word: "Didactic", meaning: "Intended to teach or instruct" },
+{ word: "Disparate", meaning: "Essentially different in kind" },
+{ word: "Ebullient", meaning: "Cheerful and full of energy" },
+{ word: "Enigma", meaning: "A person or thing that is mysterious" },
+{ word: "Ephemeral", meaning: "Lasting for a very short time" },
+{ word: "Erudite", meaning: "Having great knowledge or learning" },
+{ word: "Esoteric", meaning: "Intended for a small number of people with special knowledge" },
+{ word: "Euphemism", meaning: "A mild expression used instead of a harsh one" },
+{ word: "Exacerbate", meaning: "To make a problem worse" },
+{ word: "Fastidious", meaning: "Very attentive to detail" },
+{ word: "Furtive", meaning: "Attempting to avoid notice" },
+{ word: "Garrulous", meaning: "Excessively talkative" },
+{ word: "Harbinger", meaning: "A sign of something to come" },
+{ word: "Impetuous", meaning: "Acting quickly without thought" }, 
+{ word: "Incessant", meaning: "Continuing without pause" },
+{ word: "Indolent", meaning: "Wanting to avoid activity; lazy" },
+{ word: "Ineffable", meaning: "Too great to be expressed in words" },
+{ word: "Juxtaposition", meaning: "Placing things side by side for comparison" },
+{ word: "Lethargic", meaning: "Sluggish and lacking energy" },
+{ word: "Magnanimous", meaning: "Very generous or forgiving" },
+{ word: "Malevolent", meaning: "Having ill will or wishing harm" },
+{ word: "Meticulous", meaning: "Showing great attention to detail" },
+{ word: "Nefarious", meaning: "Wicked or criminal" },
+{ word: "Obfuscate", meaning: "To make something unclear" },
+{ word: "Ostentatious", meaning: "Showy and designed to impress" },
+{ word: "Paradox", meaning: "A seemingly contradictory statement" },
+{ word: "Perfunctory", meaning: "Carried out with minimal effort" },
+{ word: "Pernicious", meaning: "Having a harmful effect" },
+{ word: "Quintessential", meaning: "Representing the most perfect example" },
+{ word: "Recalcitrant", meaning: "Stubbornly refusing authority" },
+{ word: "Sanguine", meaning: "Optimistic or positive" },
+{ word: "Serendipity", meaning: "Finding something good by chance" },
+{ word: "Taciturn", meaning: "Reserved or uncommunicative" },
+{ word: "Ubiquitous", meaning: "Present everywhere" },
+{ word: "Vehement", meaning: "Showing strong feeling" },
+{ word: "Wistful", meaning: "Having a feeling of vague longing" }    
 ];
 
 let stored = JSON.parse(localStorage.getItem("vocab"));
@@ -158,20 +208,35 @@ render(vocab);
     <a href="contact.html">Contact</a>
 </nav> 
    <script>
-async function getMeaning() {
-    let word = document.getElementById("wordInput").value;
+    async function getMeaning() {
+    let word = document.getElementById("wordInput").value.toLowerCase();
 
     if (word === "") {
         alert("Please enter a word");
         return;
     }
 
+    // ✅ Check in your own list FIRST
+    let foundWord = vocabularyWords.find(item => item.word.toLowerCase() === word);
+
+    if (foundWord) {
+        document.getElementById("result").innerHTML = `
+            <h3>${foundWord.word}</h3>
+            <p>${foundWord.meaning}</p>
+            <button onclick="saveWord('${foundWord.word}', '${foundWord.meaning}')">Save</button>
+        `;
+        return;
+    }
+
+    // ✅ Then API
     let url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
 
     try {
         let response = await fetch(url);
-        let data = await response.json();
 
+        if (!response.ok) throw new Error("Not found");
+
+        let data = await response.json();
         let meaning = data[0].meanings[0].definitions[0].definition;
 
         document.getElementById("result").innerHTML = `
@@ -179,20 +244,14 @@ async function getMeaning() {
             <p>${meaning}</p>
             <button onclick="saveWord('${word}', '${meaning}')">Save</button>
         `;
+
     } catch (error) {
-        document.getElementById("result").innerHTML = "Word not found 😢";
+        getBasicMeaning(word);
     }
-}
+}   
 
-function saveWord(word, meaning) {
-    let savedWords = JSON.parse(localStorage.getItem("words")) || [];
 
-    savedWords.push({ word, meaning });
-
-    localStorage.setItem("words", JSON.stringify(savedWords));
-
-    alert("Word saved successfully!");
-}
+   
 </script> 
 
 </body>
