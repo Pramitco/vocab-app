@@ -85,7 +85,7 @@ let defaultWords = [
 {word:"ability",meaning:"power or skill"},
 {word:"able",meaning:"having the power to do something"},
 {word:"apple",meaning:"a fruit"},
-{word:"book",meaning:"collection of pages"}
+{word:"book",meaning:"collection of pages"},
 { word: "Aberration", meaning: "A departure from what is normal or expected" },
 { word: "Alacrity", meaning: "Brisk and cheerful readiness" },
 { word: "Anachronistic", meaning: "Belonging to a period other than that being portrayed" },
@@ -242,7 +242,9 @@ render(vocab);
         document.getElementById("result").innerHTML = `
             <h3>${word}</h3>
             <p>${meaning}</p>
-            <button onclick="saveWord('${word}', '${meaning}')">Save</button>
+            <button onclick="document.getElementById('word').value='${word}'; document.getElementById('meaning').value='${meaning}'">
+Add to Save Box
+</button>
         `;
 
     } catch (error) {
