@@ -224,9 +224,10 @@ render(vocab);
     <h3>${foundWord.word}</h3>
     <p>${foundWord.meaning}</p>
     <button onclick="
-        document.getElementById('word').value='${foundWord.word}';
-        document.getElementById('meaning').value='${foundWord.meaning}';
-    ">Add to Save Box</button>
+    document.getElementById('word').value='${foundWord.word}';
+    document.getElementById('meaning').value='${foundWord.meaning}';
+    saveWord();
+">Save Word</button>
 `;
         return;
     }
@@ -245,10 +246,11 @@ render(vocab);
        document.getElementById("result").innerHTML = `
     <h3>${word}</h3>
     <p>${meaning}</p>
-    <button onclick="
-        document.getElementById('word').value='${word}';
-        document.getElementById('meaning').value='${meaning}';
-    ">Add to Save Box</button>
+       <button onclick="
+    document.getElementById('word').value='${word}';
+    document.getElementById('meaning').value='${meaning}';
+    saveWord();
+">Save Word</button>
 `;
 
     } catch (error) {
